@@ -136,45 +136,93 @@ The reported confusion matrix at the optimized threshold is:
  [  263 16063]]
 ```
 
-## Model Evaluation Images
+## Model Evaluation Graphs
 
-The pipeline writes these plots into the outputs directory.
+The pipeline automatically generates the following evaluation plots after training completes and writes them to `Main Project/outputs/`.
+
+---
 
 ### ROC Curve
 
-![ROC curve](outputs/roc_curve.png)
+The ROC curve demonstrates near-perfect class separation with an **AUC of 0.9994**, confirming the ensemble's ability to distinguish high-carbon trips from low-carbon ones across all decision thresholds.
+
+![ROC Curve — AUC 0.9994](Main%20Project/outputs/roc_curve.png)
+
+---
 
 ### Precision-Recall Curve
 
-![Precision-recall curve](outputs/precision_recall_curve.png)
+The Precision-Recall curve maintains near-perfect precision across the entire recall range (**PR-AUC = 0.9982**), indicating extremely low false-positive rates even at high recall levels.
+
+![Precision-Recall Curve — PR-AUC 0.9982](Main%20Project/outputs/precision_recall_curve.png)
+
+---
 
 ### LightGBM Feature Importance
 
-![LightGBM feature importance](outputs/lightgbm_feature_importance.png)
+Top-20 features ranked by split gain. `ShippingType` and `HotelNights` dominate, confirming that travel mode and accommodation duration are the strongest predictors of high carbon footprint.
 
-### SHAP Summary
+![LightGBM Top-20 Feature Importances](Main%20Project/outputs/lightgbm_feature_importance.png)
 
-![SHAP summary](outputs/shap_summary.png)
+---
 
-## Dashboard Images
+### SHAP Summary Plot
 
-The Celonis dashboard screenshots available in this workspace are embedded below.
+SHAP beeswarm plot showing each feature's directional impact on model output across all validation samples. High `ShippingType` values (e.g. Business Class Flight) push predictions strongly toward high-carbon, while economy and hybrid modes reduce the predicted score.
+
+![SHAP Summary Plot — feature impact on model output](Main%20Project/outputs/shap_summary.png)
+
+---
+
+## Celonis Dashboard
+
+The **Travel Sustainability Dashboard** was built in Celonis to provide process-mining–level visibility into corporate travel patterns. It consists of four tabs shown below.
+
+---
 
 ### Process Explorer
 
-![Process Explorer](outputs/dashboard/process_explorer.png)
+End-to-end process flow across all 65,289 trips, from **Start → Book Mode of Transportation → Book Lodging → Submit Travel Request → Travel Request Approved → Receive Confirmation → Take Departure Flight → Take Return Flight → Submit Expense Request → Expense Request Approved → Expense Reimbursement → End**, with case volume annotated on every transition arc.
+
+![Celonis Dashboard — Process Explorer tab](Main%20Project/outputs/dashboard/process_explorer.png)
+
+---
 
 ### Variant Explorer
 
-![Variant Explorer](outputs/dashboard/variant_explorer.png)
+Variant Explorer displaying the **top 34 process variants** covering **35% of all cases** (22.8K cases). The dominant happy path executes all 12 standard steps in sequence with no rework or skipped events.
+
+![Celonis Dashboard — Variant Explorer tab](Main%20Project/outputs/dashboard/variant_explorer.png)
+
+---
 
 ### KPI Analysis
 
-![KPI Analysis](outputs/dashboard/kpi_analysis.png)
+High-level KPI summary computed across the full dataset:
+
+| KPI | Value |
+|---|---|
+| Total Trips | 65,289 |
+| Total CO₂ Emissions | 178,090,088.41 |
+| Average CO₂ per Trip | 2,727.72 |
+| Total Spend | 105,699,613.09 |
+| Average Spend per Trip | 1,618.95 |
+| Out-of-Policy Trips | 12,005 |
+
+![Celonis Dashboard — KPI Analysis tab](Main%20Project/outputs/dashboard/kpi_analysis.png)
+
+---
 
 ### Visualizations
 
-![Visualizations](outputs/dashboard/visualizations.png)
+Four charts give a quick breakdown of where emissions and spend are concentrated:
+
+- **CO₂ Emissions by Travel Mode** — Business Class and Economy flights account for the vast majority of emissions; electric vehicles contribute near zero.
+- **Travel Spend by Business Unit** — Sales and Marketing are the highest-spending units, together representing over half of total travel expenditure.
+- **CO₂ Emissions by Country** — Australia (AU) is the top emitting departure country, followed by Brazil (BR) and China (CN).
+- **High-Carbon Trip Distribution** — 18.39% of trips are flagged as high-carbon (HighCarbon = Yes), representing approximately 11,905 trips out of 65,289 total.
+
+![Celonis Dashboard — Visualizations tab](Main%20Project/outputs/dashboard/visualizations.png)
 
 ## Outputs
 
